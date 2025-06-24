@@ -28,7 +28,7 @@ chatbot_silvy/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Thirumalai-Nambi-S/Chatbot_silvy.git
+   git clone https://github.com/Thirumalai-Nambi-S/ChatBot.git
    ```
 2. Open `index.html` in your browser.
 
