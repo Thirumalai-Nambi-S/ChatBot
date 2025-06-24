@@ -34,7 +34,7 @@ chatbot_silvy/
 
 ## 🌐 Live Demo
 
-[Click here to view it live](thirumalai-nambi-chatbot-silvy.netlify.app/)
+[Click here to view it live](thirumalai-nambi-chatbot.netlify.app/)
 
 ## 📌 Future Improvements
 
