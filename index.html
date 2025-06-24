@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- ChatBot by Nambi- Silvy  -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nambi's Assistant | silvy </title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@32,400,0,0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="video-container">
+      <video autoplay muted loop playsinline preload="auto" disablePictureInPicture>
+
+        <source src="videos/enhanced_background2.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+    </div>
+  
+
+    <div class="chatbot-content">
+
+    </div>
+  </body>
+    </div>
+    <div class="container">
+
+      <header class="app-header">
+        <h1 class="heading">Nambi's Assistant</h1>
+        <h4 class="sub-heading">Got something on your mind? I’m here to help.</h4>
+      </header>
+
+      <ul class="suggestions">
+        <li class="suggestions-item">
+          <p class="text">Simulate a mock interview for a frontend developer role.</p>
+          <span class="icon material-symbols-rounded">draw</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">How can I build a Personal Brand as a Software Engineer?</p>
+          <span class="icon material-symbols-rounded">lightbulb</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">who's the one that made you?</p>
+          <span class="icon material-symbols-rounded">explore</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">Create a professional GitHub README for a React Project.</p>
+          <span class="icon material-symbols-rounded">code_blocks</span>
+        </li>
+      </ul>
+
+      <div class="chats-container"></div>
+
+      <div class="prompt-container">
+        <div class="prompt-wrapper">
+          <form action="#" class="prompt-form">
+            <input type="text" placeholder="Ask Silvy" class="prompt-input" required />
+            <div class="prompt-actions">
+
+              <div class="file-upload-wrapper">
+                <img src="#" class="file-preview" />
+                <input id="file-input" type="file" accept="image/*, .pdf, .txt, .csv" hidden />
+                <button type="button" class="file-icon material-symbols-rounded">description</button>
+                <button id="cancel-file-btn" type="button" class="material-symbols-rounded">close</button>
+                <button id="add-file-btn" type="button" class="material-symbols-rounded">attach_file</button>
+              </div>
+
+              <button id="stop-response-btn" type="button" class="material-symbols-rounded">stop_circle</button>
+              <button id="send-prompt-btn" class="material-symbols-rounded">arrow_upward</button>
+            </div>
+          </form>
+
+          <button id="theme-toggle-btn" class="material-symbols-rounded">light_mode</button>
+          <button id="delete-chats-btn" class="material-symbols-rounded">delete</button>
+        </div>
+        <p class="disclaimer-text">Silvy is not 100% correct, So consider Double Checking</p>
+        <p class="disclaimer-text">© Copyright @Thirumalai Nambi. So Contact Owner.</p>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
