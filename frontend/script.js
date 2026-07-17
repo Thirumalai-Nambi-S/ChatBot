@@ -22,7 +22,7 @@ const chatHistoryList = document.querySelector("#chat-history-list");
 // just POSTs the conversation history to /api/chat and reads back a
 // Server-Sent Events stream. Change this if your backend runs elsewhere
 // (a different port locally, or a real domain once deployed).
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "https://chatbot-backend.onrender.com";
 const CHAT_ENDPOINT = `${API_BASE_URL}/api/chat`;
 
 let controller, typingInterval;
