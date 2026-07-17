@@ -1,147 +1,474 @@
-# Leviathan / Silvy Chatbot — Frontend + Python Backend
+# 🤖 ChatBot v2 — AI-Powered Multi-Provider Conversational Assistant
 
-This is the same chatbot you had before (plain HTML/CSS/JS UI, Groq → OpenRouter → Gemini
-fallback chain, image attachments, chat history sidebar, cursor-trail glow, etc.), just
-split into two independent projects that talk to each other over HTTP:
+<p align="center">
+
+![Version](https://img.shields.io/badge/Version-v2.0-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-yellow)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![HTML5](https://img.shields.io/badge/Frontend-HTML5-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+</p>
+
+---
+
+## 📌 Overview
+
+**ChatBot v2** is the complete redesign of my original chatbot application.
+
+Version 2 introduces a secure Python backend, multi-provider AI support, user authentication, streaming responses, improved UI, and a scalable architecture while maintaining the smooth user experience from Version 1.
+
+Unlike Version 1, where AI API keys were exposed inside frontend JavaScript, Version 2 securely stores all AI providers on the backend using FastAPI.
+
+---
+
+# 🚀 What's New in Version 2
+
+### 🔥 New Architecture
+
+- FastAPI Backend
+- Static Frontend
+- Secure API communication
+- Environment-based configuration
+- Scalable project structure
+
+---
+
+### 🤖 AI Providers
+
+Supports automatic fallback between multiple LLM providers.
+
+Provider Order:
 
 ```
-chatbot-project/
-├── backend/          FastAPI server — owns the API keys, calls Groq/OpenRouter/Gemini
+Groq
+   ↓
+OpenRouter
+   ↓
+Google Gemini
+```
+
+If one provider fails, the chatbot automatically switches to the next provider without interrupting the conversation.
+
+---
+
+### 🔐 Authentication
+
+Integrated with **Supabase Authentication**
+
+Features:
+
+- Email Signup
+- Email Login
+- Session Management
+- Logout
+- Authentication State Detection
+
+---
+
+### 💬 Chat Features
+
+- Real-time AI Responses
+- Streaming Text Generation
+- Markdown Rendering
+- Image Upload Support
+- Chat History
+- Local Storage Sessions
+- Stop Generation Button
+- AI Suggestions
+
+---
+
+### 🎨 User Interface
+
+- Responsive Design
+- Dark Mode
+- Modern Chat Layout
+- Cursor Glow Effect
+- Animated Interface
+- Mobile Friendly
+
+---
+
+## 📁 Project Structure
+
+```
+ChatBot/
+
+│
+├── backend/
 │   ├── app.py
 │   ├── providers.py
 │   ├── requirements.txt
-│   ├── .env            (your real keys — already filled in from your old script.js)
-│   └── .env.example
-└── frontend/          Plain static site — unchanged UI/UX, no build step
-    ├── index.html
-    ├── style.css
-    ├── script.js
-    └── images/
+│   ├── .env.example
+│   └── .env (ignored)
+│
+├── frontend/
+│   ├── index.html
+│   ├── login.html
+│   ├── signup.html
+│   ├── style.css
+│   ├── script.js
+│   ├── supabase-client.js
+│   └── images/
+│
+├── README.md
+└── LICENSE
 ```
 
-## Why split it up this way
+---
 
-In the original single-file version, your Groq/OpenRouter/Gemini API keys were sitting
-in plain text inside `script.js` — anyone who opened devtools on the live site could copy
-them straight out. Moving the provider calls to a backend fixes that: the browser now only
-ever talks to *your* server, and your server holds the real keys.
+# 🛠 Tech Stack
 
-**Important:** because those keys were already shipped to the browser in the version you
-uploaded, treat them as already exposed. I carried them over into `backend/.env` so the
-app works immediately, but you should rotate (regenerate) all three keys in the Groq,
-OpenRouter, and Google AI Studio dashboards once you're set up, then drop the new ones
-into `.env`.
+## Frontend
 
-## How it works
+- HTML5
+- CSS3
+- JavaScript (ES6)
 
-1. Frontend collects your message (+ optional image), keeps the same `chatHistory` in
-   `localStorage` it always did, and POSTs the whole conversation to the backend:
-   `POST /api/chat` with `{ "history": [...] }`.
-2. Backend tries **Groq → OpenRouter → Gemini** in order — identical logic to before,
-   just server-side now (`backend/providers.py`).
-3. Backend streams the reply back as Server-Sent Events (`chunk`, `reset`, `done`, `error`),
-   and the frontend paints it into the chat bubble live, word by word — same feel as before.
-   If a provider fails partway through, the bubble clears and the next provider takes over,
-   exactly like the old fallback behavior.
+---
 
-## Running it locally
+## Backend
 
-### 1. Backend
+- Python
+- FastAPI
+- Uvicorn
+
+---
+
+## Authentication
+
+- Supabase Auth
+
+---
+
+## AI Providers
+
+- Groq
+- OpenRouter
+- Google Gemini
+
+---
+
+## Deployment
+
+Frontend
+
+- Netlify
+- Vercel
+- GitHub Pages
+
+Backend
+
+- Render
+- Railway
+- Fly.io
+- VPS
+
+---
+
+# ⚙️ Installation
+
+## 1 Clone Repository
+
+```bash
+git clone https://github.com/Thirumalai-Nambi-S/ChatBot.git
+
+cd ChatBot
+```
+
+---
+
+## 2 Backend Setup
+
+Navigate to backend
 
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app:app --reload --port 8000
 ```
 
-Check it's alive: open http://127.0.0.1:8000/api/health — should return `{"status":"ok"}`.
+Create virtual environment
 
-Your keys already live in `backend/.env`. If you ever need to change them, edit that file
-(never commit it — see `.gitignore` note below) using `.env.example` as the template.
-
-### 2. Frontend
-
-The frontend is just static files — no build step, no npm install. Serve it with any
-static server, e.g.:
+### Windows
 
 ```bash
-cd frontend
-python -m http.server 5500
+python -m venv venv
+
+venv\Scripts\activate
 ```
 
-Then open http://127.0.0.1:5500 in your browser.
+### macOS/Linux
 
-(Opening `index.html` directly via `file://` also works with `fetch`, but a real local
-server avoids occasional browser quirks with `file://` origins — recommended.)
+```bash
+python3 -m venv venv
 
-### 3. Point the frontend at your backend
-
-In `frontend/script.js`, near the top:
-
-```js
-const API_BASE_URL = "http://127.0.0.1:8000";
+source venv/bin/activate
 ```
 
-Change this if your backend runs on a different port or, later, a real domain once deployed.
+Install dependencies
 
-## Deploying
+```bash
+pip install -r requirements.txt
+```
 
-- **Backend**: deploy `backend/` anywhere that runs Python (Render, Railway, Fly.io, a VPS
-  with `uvicorn`/`gunicorn`, etc.). Set `GROQ_API_KEY`, `OPENROUTER_API_KEY`, and
-  `GEMINI_API_KEY` as environment variables on that platform — don't upload `.env` itself.
-- **Frontend**: deploy `frontend/` as a static site (Netlify, Vercel, GitHub Pages, S3, etc.).
-- Update `API_BASE_URL` in `script.js` to your backend's real URL, and tighten the CORS
-  `allow_origins` list in `backend/app.py` from `["*"]` to your actual frontend domain.
+---
 
-## Login / Sign up (Supabase Auth)
+## 3 Environment Variables
 
-The frontend now has email/password auth via Supabase, styled to match the rest of the app:
-
-- `frontend/login.html` — log in
-- `frontend/signup.html` — create an account
-- `frontend/supabase-client.js` — shared Supabase client (holds the project URL + publishable/anon key)
-
-`index.html` is open to guests — it no longer redirects anyone away. Instead, two separate icon
-buttons sit fixed in the top-right corner: **Log in** and **Sign up**, each linking straight to
-its own page. Once a session exists, `index.html` swaps those two buttons out for the user's
-email address and a **Log out** button, in the same top-right spot (this happens automatically
-via `supabaseClient.auth.getSession()` / `onAuthStateChange()` on page load). `login.html` and
-`signup.html` each also have a back arrow (top-left) to return to the chat without logging in.
-
-**Note on the Supabase key:** the "publishable" key in `supabase-client.js` is meant to be
-public — it's not a secret like the Groq/OpenRouter/Gemini keys in `backend/.env`. Supabase's
-Row Level Security policies (configured in your Supabase dashboard) are what actually protect
-your data, not keeping this key hidden.
-
-**Email confirmation:** by default, a new Supabase project requires users to click a
-confirmation link in their email before they can log in. `signup.html` handles both cases
-(instant session vs. "check your email"). You can turn confirmation off in
-Supabase → Authentication → Providers → Email if you want signups to log straight in.
-
-**Heads up:** right now the FastAPI backend (`/api/chat`) doesn't check who's calling it —
-the Supabase login only gates the *frontend page*, not the API itself. Anyone who finds your
-backend URL could call `/api/chat` directly. If you want the backend to actually require a
-logged-in Supabase user, that's a follow-up (verifying the Supabase JWT on each request) —
-just ask if you'd like that added.
-
-## What stayed exactly the same
-
-- All UI/UX: theme toggle, sidebar chat history, markdown rendering, image attachments,
-  suggestion cards, cursor-trail glow, stop-generating button.
-- Chat sessions still live in the browser's `localStorage` — the backend is stateless and
-  has no database; it only proxies a single request/response per turn.
-- The custom scripted replies (`getCustomReply` in `script.js`) still run entirely in the
-  browser, same as before — only real AI calls go through the backend.
-- Same provider order and same "only fall back on actual failure" behavior.
-
-## .gitignore reminder
-
-If you put this in git, ignore the real `.env`:
+Create
 
 ```
 backend/.env
-backend/venv/
-backend/__pycache__/
 ```
+
+Example
+
+```env
+GROQ_API_KEY=YOUR_GROQ_KEY
+
+OPENROUTER_API_KEY=YOUR_OPENROUTER_KEY
+
+GEMINI_API_KEY=YOUR_GEMINI_KEY
+```
+
+Never upload this file.
+
+---
+
+## 4 Start Backend
+
+```bash
+uvicorn app:app --reload --port 8000
+```
+
+Backend URL
+
+```
+http://127.0.0.1:8000
+```
+
+Health Check
+
+```
+http://127.0.0.1:8000/api/health
+```
+
+---
+
+## 5 Frontend
+
+Open another terminal
+
+```bash
+cd frontend
+
+python -m http.server 5500
+```
+
+Visit
+
+```
+http://127.0.0.1:5500
+```
+
+---
+
+# 🔑 Supabase Setup
+
+Create a project in Supabase.
+
+Enable Email Authentication.
+
+Copy
+
+- Project URL
+
+- Publishable (Anon) Key
+
+Paste them into
+
+```
+frontend/supabase-client.js
+```
+
+Example
+
+```javascript
+const SUPABASE_URL = "YOUR_PROJECT_URL";
+
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+```
+
+---
+
+# 🌐 Deployment
+
+## Backend
+
+Deploy
+
+```
+backend/
+```
+
+to
+
+- Render
+
+or
+
+- Railway
+
+Set environment variables
+
+```
+GROQ_API_KEY
+
+OPENROUTER_API_KEY
+
+GEMINI_API_KEY
+```
+
+---
+
+## Frontend
+
+Deploy
+
+```
+frontend/
+```
+
+to
+
+- Netlify
+
+or
+
+- Vercel
+
+Update
+
+```
+API_BASE_URL
+```
+
+inside
+
+```
+script.js
+```
+
+---
+
+# 📷 Screenshots
+
+Add screenshots here.
+
+Example
+
+```
+screenshots/
+
+home.png
+
+login.png
+
+signup.png
+
+chat.png
+```
+
+---
+
+# 🔄 Version History
+
+## Version 2.0 (Current)
+
+- Complete project redesign
+- FastAPI backend
+- Secure API architecture
+- Supabase Authentication
+- Streaming responses
+- Multi-provider AI fallback
+- Improved UI
+- Better project structure
+- Environment variables
+- Production-ready architecture
+
+---
+
+## Version 1.0
+
+- Static HTML/CSS/JavaScript chatbot
+- Frontend-only implementation
+- Direct AI API integration
+- Basic conversational interface
+
+---
+
+# 🔒 Security
+
+This project follows security best practices.
+
+- API keys are stored in environment variables.
+- `.env` is excluded from Git.
+- Secrets are never committed.
+- Authentication handled through Supabase.
+
+---
+
+# 📈 Future Improvements
+
+- Voice Chat
+- File Upload Analysis
+- Database Chat History
+- User Profiles
+- Conversation Export
+- AI Agent Selection
+- Admin Dashboard
+- Mobile App
+- Docker Support
+- CI/CD Pipeline
+
+---
+
+# 👨‍💻 Author
+
+**Thirumalai Nambi S**
+
+Final Year Artificial Intelligence & Data Science Student
+
+Aspiring AI Engineer • Data Scientist • Full Stack Developer
+
+GitHub
+
+https://github.com/Thirumalai-Nambi-S
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+# ⭐ Support
+
+If you found this project useful,
+
+⭐ Star the repository
+
+🍴 Fork it
+
+🛠 Contribute
+
+📢 Share it
+
+---
+
+## Version
+
+Current Release
+
+**ChatBot v2.0**
