@@ -27,8 +27,7 @@ app = FastAPI(title="Leviathan Chatbot API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
+    
     "https://chatbot-v2-cyan.vercel.app"
     ],
     allow_credentials=False,
