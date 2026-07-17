@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!-- ChatBot by Nambi — Leviathan (Levi) — Login -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in | Leviathan</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="images/leviathan-logo.png" />
+    <link rel="shortcut icon" type="image/png" href="images/leviathan-logo.png" />
+    <link rel="apple-touch-icon" href="images/leviathan-logo.png" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@32,400,0,0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="auth-page">
+    <a href="index.html" class="auth-back-btn material-symbols-rounded" title="Back to chat">arrow_back</a>
+
+    <div class="bg-animation">
+      <div class="stars stars-small"></div>
+      <div class="stars stars-medium"></div>
+      <div class="stars stars-large"></div>
+    </div>
+
+    <div class="watermark-logo" aria-hidden="true">
+      <img src="images/leviathan-logo.png" alt="" />
+    </div>
+
+    <main class="auth-shell">
+      <div class="auth-card">
+        <img class="auth-logo" src="images/leviathan-logo.png" alt="Leviathan" />
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Log in to keep chatting with Levi.</p>
+
+        <div id="auth-message" class="auth-message" hidden></div>
+
+        <form id="login-form" class="auth-form" novalidate>
+          <label class="auth-field">
+            <span>Email</span>
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" required />
+          </label>
+
+          <label class="auth-field">
+            <span>Password</span>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required minlength="6" />
+          </label>
+
+          <button type="submit" id="login-submit-btn" class="auth-submit-btn">Log in</button>
+        </form>
+
+        <p class="auth-switch">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </p>
+      </div>
+    </main>
+
+    <script src="supabase-client.js"></script>
+    <script>
+      const form = document.getElementById("login-form");
+      const emailInput = document.getElementById("login-email");
+      const passwordInput = document.getElementById("login-password");
+      const submitBtn = document.getElementById("login-submit-btn");
+      const messageBox = document.getElementById("auth-message");
+
+      const showMessage = (text, isError = true) => {
+        messageBox.textContent = text;
+        messageBox.hidden = false;
+        messageBox.classList.toggle("auth-message-error", isError);
+        messageBox.classList.toggle("auth-message-success", !isError);
+      };
+
+      // Already logged in? Skip straight past the login form.
+      (async () => {
+        const { data } = await supabaseClient.auth.getSession();
+        if (data.session) window.location.href = "index.html";
+      })();
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Logging in...";
+        messageBox.hidden = true;
+
+        const { error } = await supabaseClient.auth.signInWithPassword({
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        });
+
+        if (error) {
+          showMessage(error.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Log in";
+          return;
+        }
+
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>

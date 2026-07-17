@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!-- ChatBot by Nambi — Leviathan (Levi) -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leviathan | Levi</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="images/leviathan-logo.png" />
+    <link rel="shortcut icon" type="image/png" href="images/leviathan-logo.png" />
+    <link rel="apple-touch-icon" href="images/leviathan-logo.png" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@32,400,0,0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <div class="cursor-trail"></div>
+
+    <button id="menu-toggle-btn" class="menu-toggle-btn material-symbols-rounded" title="Menu">menu</button>
+    <button id="home-btn" class="home-btn material-symbols-rounded" title="Home (start a new chat)">home</button>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>Chats</h2>
+        <button id="sidebar-close-btn" class="material-symbols-rounded" title="Close">close</button>
+      </div>
+
+      <button id="new-chat-btn" class="new-chat-btn" title="Start a new chat">
+        <span class="material-symbols-rounded">add</span>
+        New Chat
+      </button>
+
+      <div class="sidebar-section-label">Chat History</div>
+      <ul class="chat-history-list" id="chat-history-list"></ul>
+
+      <!-- Account area, pinned to the bottom of the sidebar (ChatGPT-style). -->
+      <div class="sidebar-account">
+        <!-- Logged-out row -->
+        <a href="login.html" id="sidebar-login-row" class="sidebar-account-row" title="Log in">
+          <span class="sidebar-account-avatar sidebar-account-avatar-guest material-symbols-rounded">person</span>
+          <span class="sidebar-account-info">
+            <span class="sidebar-account-name">Log in</span>
+            <span class="sidebar-account-sub">Sync your chats across devices</span>
+          </span>
+          <span class="material-symbols-rounded sidebar-account-chevron">login</span>
+        </a>
+
+        <!-- Logged-in row + popover menu (hidden until authenticated) -->
+        <div id="sidebar-account-loggedin" class="sidebar-account-wrap" hidden>
+          <div class="sidebar-account-menu" id="sidebar-account-menu" hidden>
+            <div class="sidebar-account-menu-header">
+              <span class="sidebar-account-avatar" id="sidebar-account-avatar-lg">L</span>
+              <span class="sidebar-account-menu-info">
+                <span class="sidebar-account-menu-name" id="sidebar-account-menu-name">Account</span>
+                <span class="sidebar-account-menu-email" id="sidebar-account-menu-email">you@example.com</span>
+              </span>
+            </div>
+            <div class="sidebar-account-menu-divider"></div>
+            <button type="button" class="sidebar-account-menu-item" id="sidebar-theme-item">
+              <span class="material-symbols-rounded" id="sidebar-theme-item-icon">dark_mode</span>
+              <span id="sidebar-theme-item-label">Switch to light theme</span>
+            </button>
+            <div class="sidebar-account-menu-divider"></div>
+            <button type="button" class="sidebar-account-menu-item sidebar-account-menu-item-danger" id="sidebar-logout-btn">
+              <span class="material-symbols-rounded">logout</span>
+              <span>Log out</span>
+            </button>
+          </div>
+
+          <button type="button" id="sidebar-account-btn" class="sidebar-account-row" aria-haspopup="true" aria-expanded="false" title="Account menu">
+            <span class="sidebar-account-avatar" id="sidebar-account-avatar">L</span>
+            <span class="sidebar-account-info">
+              <span class="sidebar-account-name" id="sidebar-account-name">Account</span>
+              <span class="sidebar-account-sub" id="sidebar-account-email">you@example.com</span>
+            </span>
+            <span class="material-symbols-rounded sidebar-account-chevron">expand_more</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="bg-animation">
+      <div class="stars stars-small"></div>
+      <div class="stars stars-medium"></div>
+      <div class="stars stars-large"></div>
+    </div>
+
+    <div class="watermark-logo" aria-hidden="true">
+      <img id="watermark-logo-img" src="images/leviathan-logo.png" alt="" />
+    </div>
+
+    <div class="app-shell">
+      <div class="container">
+
+        <header class="app-header">
+          <div class="header-text">
+            <h1 class="heading">Leviathan</h1>
+            <h4 class="sub-heading">Got something on your mind? Levi is here to help.</h4>
+          </div>
+        </header>
+
+        <div class="chats-container"></div>
+      </div>
+
+      <ul class="suggestions">
+        <li class="suggestions-item">
+          <p class="text">Simulate a mock interview for a frontend developer role.</p>
+          <span class="icon material-symbols-rounded">draw</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">How can I build a Personal Brand as a Software Engineer?</p>
+          <span class="icon material-symbols-rounded">lightbulb</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">who's the one that made you?</p>
+          <span class="icon material-symbols-rounded">explore</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">Create a professional GitHub README for a React Project.</p>
+          <span class="icon material-symbols-rounded">code_blocks</span>
+        </li>
+      </ul>
+
+      <div class="prompt-container">
+        <div class="prompt-wrapper">
+          <form action="#" class="prompt-form">
+            <input type="text" placeholder="Ask Levi" class="prompt-input" required />
+            <div class="prompt-actions">
+
+              <div class="file-upload-wrapper">
+                <img src="#" class="file-preview" />
+                <input id="file-input" type="file" accept="image/*, .pdf, .txt, .csv" hidden />
+                <button type="button" class="file-icon material-symbols-rounded" title="Attached file">description</button>
+                <button id="cancel-file-btn" type="button" class="material-symbols-rounded" title="Remove file">close</button>
+                <button id="add-file-btn" type="button" class="material-symbols-rounded" title="Attach a file">attach_file</button>
+              </div>
+
+              <button id="stop-response-btn" type="button" class="material-symbols-rounded" title="Stop generating">stop_circle</button>
+              <button id="send-prompt-btn" class="material-symbols-rounded" title="Send message">arrow_upward</button>
+            </div>
+          </form>
+
+          <button id="theme-toggle-btn" class="material-symbols-rounded" title="Toggle theme">light_mode</button>
+          <button id="delete-chats-btn" class="material-symbols-rounded" title="Delete this chat">delete</button>
+        </div>
+        <p class="disclaimer-text">Leviathan is not 100% correct, So consider Double Checking</p>
+        <p class="disclaimer-text">© Copyright @Thirumalai Nambi. So Contact Owner.</p>
+      </div>
+    </div>
+    <script src="supabase-client.js"></script>
+    <script>
+      // Sidebar account (ChatGPT-style):
+      //  - logged out -> "Log in" row, links to login.html (which links to
+      //    signup.html too)
+      //  - logged in  -> avatar + name row; clicking it opens a popover
+      //    menu right above it, with a theme shortcut and Log out
+      const loginRow = document.getElementById("sidebar-login-row");
+      const loggedInWrap = document.getElementById("sidebar-account-loggedin");
+      const accountBtn = document.getElementById("sidebar-account-btn");
+      const accountMenu = document.getElementById("sidebar-account-menu");
+      const accountAvatar = document.getElementById("sidebar-account-avatar");
+      const accountAvatarLg = document.getElementById("sidebar-account-avatar-lg");
+      const accountName = document.getElementById("sidebar-account-name");
+      const accountEmail = document.getElementById("sidebar-account-email");
+      const menuName = document.getElementById("sidebar-account-menu-name");
+      const menuEmail = document.getElementById("sidebar-account-menu-email");
+      const themeItemIcon = document.getElementById("sidebar-theme-item-icon");
+      const themeItemLabel = document.getElementById("sidebar-theme-item-label");
+
+      const closeAccountMenu = () => {
+        accountMenu.hidden = true;
+        accountBtn.setAttribute("aria-expanded", "false");
+      };
+
+      const applyAuthState = (session) => {
+        if (session) {
+          loginRow.hidden = true;
+          loggedInWrap.hidden = false;
+
+          const email = session.user.email ?? "your account";
+          const initial = email.charAt(0).toUpperCase();
+          const displayName = email.split("@")[0];
+
+          accountAvatar.textContent = initial;
+          accountAvatarLg.textContent = initial;
+          accountName.textContent = displayName;
+          accountEmail.textContent = email;
+          menuName.textContent = displayName;
+          menuEmail.textContent = email;
+        } else {
+          loginRow.hidden = false;
+          loggedInWrap.hidden = true;
+          closeAccountMenu();
+        }
+      };
+
+      (async () => {
+        const { data } = await supabaseClient.auth.getSession();
+        applyAuthState(data.session);
+        supabaseClient.auth.onAuthStateChange((_event, session) => applyAuthState(session));
+      })();
+
+      accountBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = !accountMenu.hidden;
+        accountMenu.hidden = isOpen;
+        accountBtn.setAttribute("aria-expanded", String(!isOpen));
+      });
+
+      // Click-away closes the popover
+      document.addEventListener("click", (e) => {
+        if (!accountMenu.hidden && !loggedInWrap.contains(e.target)) closeAccountMenu();
+      });
+
+      document.getElementById("sidebar-logout-btn").addEventListener("click", async () => {
+        closeAccountMenu();
+        await supabaseClient.auth.signOut();
+      });
+
+      // The "Theme" shortcut just drives the real theme-toggle button, so
+      // all its existing logic (icon swap + localStorage) keeps working.
+      const syncThemeItemLabel = () => {
+        const isLight = document.body.classList.contains("light-theme");
+        themeItemIcon.textContent = isLight ? "dark_mode" : "light_mode";
+        themeItemLabel.textContent = isLight ? "Switch to dark theme" : "Switch to light theme";
+      };
+
+      document.getElementById("sidebar-theme-item").addEventListener("click", () => {
+        document.getElementById("theme-toggle-btn").click();
+        syncThemeItemLabel();
+        closeAccountMenu();
+      });
+    </script>
+    <script src="script.js"></script>
+    <script>
+      // script.js has now applied the saved theme to <body> — sync the
+      // sidebar's "Theme" menu item label/icon to match.
+      syncThemeItemLabel();
+    </script>
+    <script>
+      // Cursor trail glow effect
+      const cursorTrail = document.querySelector(".cursor-trail");
+
+      let trailX = 0, trailY = 0;
+      let targetX = 0, targetY = 0;
+      const trailSpeed = 0.08; // smooth lag
+
+      document.addEventListener("mousemove", (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      });
+
+      function animateCursorTrail() {
+        trailX += (targetX - trailX) * trailSpeed;
+        trailY += (targetY - trailY) * trailSpeed;
+
+        cursorTrail.style.transform = `translate(${trailX - 150}px, ${trailY - 150}px)`;
+
+        requestAnimationFrame(animateCursorTrail);
+      }
+
+      // Only run on non-touch devices
+      if (window.matchMedia("(pointer: fine)").matches) {
+        animateCursorTrail();
+      }
+    </script>
+  </body>
+</html>
