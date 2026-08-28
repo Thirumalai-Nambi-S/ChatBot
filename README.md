@@ -2,7 +2,7 @@
 
 <p align="center">
 
-![Version](https://img.shields.io/badge/Version-v2.0-blue)
+![Version](https://img.shields.io/badge/Version-v2.0-blue)å
 ![Python](https://img.shields.io/badge/Python-3.10+-yellow)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
 ![HTML5](https://img.shields.io/badge/Frontend-HTML5-orange)
@@ -11,6 +11,30 @@
 </p>
 
 ---
+# 🌐 LIVE
+
+<div align="center">
+
+## 🚀 Enter the Chat
+
+<a href="https://chatbot-v2-cyan.vercel.app/">
+
+<img src="https://img.shields.io/badge/OPEN%20CHATBOT%20V2-0EA5E9?style=for-the-badge&logo=vercel&logoColor=white"/>
+
+</a>
+
+<br><br>
+
+### 🔗 https://chatbot-v2-cyan.vercel.app/
+
+<br>
+
+**Start a conversation. Watch the response stream.**
+
+</div>
+
+---
+
 
 ## 📌 Overview
 
